@@ -7,7 +7,8 @@
   ],
   "scripts": {
     "check": "tsc",
-    "start": "npm run start --workspace=server"
+    "start": "npm run start --workspace=server",
+    "try": "npm run try --workspace=server"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
