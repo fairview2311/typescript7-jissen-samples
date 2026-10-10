@@ -1,7 +1,18 @@
 {
+  // shared と server の型を、まとめて確かめる設定
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "sourceMap": true
-  }
+    // Node.js のやり方で import を読む（拡張子を書く）
+    "module": "nodenext",
+    // Node.js の型（process など）を使う
+    "types": ["node"],
+    // JavaScript を出力しない（.ts は Node.js が直接動かす）
+    "noEmit": true,
+    // import に .ts の拡張子を書けるようにする
+    "allowImportingTsExtensions": true,
+    // Node.js が取り除ける型の書き方だけを使う
+    "erasableSyntaxOnly": true,
+    // 型だけの import には type を付けさせる
+    "verbatimModuleSyntax": true
+  },
+  "include": ["shared/src", "server/src"]
 }

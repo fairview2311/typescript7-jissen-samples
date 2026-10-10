@@ -4,10 +4,8 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "tasks を実行",
-      "program": "${workspaceFolder}/dist/index.js",
-      "preLaunchTask": "npm: build",
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+      "name": "server を実行",
+      "program": "${workspaceFolder}/server/src/index.ts"
     }
   ]
 }
