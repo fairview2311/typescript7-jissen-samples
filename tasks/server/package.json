@@ -4,11 +4,17 @@
   "type": "module",
   "scripts": {
     "start": "node src/index.ts",
-    "try": "node src/try-api.ts"
+    "try": "node src/try-api.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@hono/node-server": "^2.1.4",
     "@tasks/shared": "*",
+    "drizzle-orm": "^1.0.0-rc.4",
     "hono": "^4.13.13"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^1.0.0-rc.4"
   }
 }

@@ -1,25 +1,28 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { isTaskStatus, parseTask, type Task } from "@tasks/shared";
+import { isTaskStatus, parseTask } from "@tasks/shared";
 import { sampleTasks } from "./sample-tasks.ts";
 import { sortByDueDate } from "./task-list.ts";
+import {
+  addTask,
+  deleteTask,
+  getTask,
+  listTasks,
+  seedIfEmpty,
+  updateTask,
+} from "./task-store.ts";
 
 const app = new Hono();
 
-let tasks: Task[] = [...sampleTasks];
-let nextId = 6;
-
-app.get("/api/tasks", (c) => {
+app.get("/api/tasks", async (c) => {
   const status = c.req.query("status");
-  const list = isTaskStatus(status)
-    ? tasks.filter((task) => task.status === status)
-    : tasks;
+  const list = await listTasks(isTaskStatus(status) ? status : undefined);
   return c.json(sortByDueDate(list));
 });
 
-app.get("/api/tasks/:id", (c) => {
+app.get("/api/tasks/:id", async (c) => {
   const id = Number(c.req.param("id"));
-  const task = tasks.find((t) => t.id === id);
+  const task = await getTask(id);
   if (task === undefined) {
     return c.json({ error: `id ${id} のタスクはありません` }, 404);
   }
@@ -31,18 +34,17 @@ app.post("/api/tasks", async (c) => {
   if (typeof body !== "object" || body === null) {
     return c.json({ error: "JSON のオブジェクトを送ってください" }, 400);
   }
-  const parsed = parseTask({ ...body, id: nextId });
+  const parsed = parseTask({ ...body, id: 0 });
   if (!parsed.ok) {
     return c.json({ error: parsed.error }, 400);
   }
-  nextId += 1;
-  tasks.push(parsed.task);
-  return c.json(parsed.task, 201);
+  const task = await addTask(parsed.task);
+  return c.json(task, 201);
 });
 
 app.patch("/api/tasks/:id", async (c) => {
   const id = Number(c.req.param("id"));
-  const current = tasks.find((t) => t.id === id);
+  const current = await getTask(id);
   if (current === undefined) {
     return c.json({ error: `id ${id} のタスクはありません` }, 404);
   }
@@ -54,16 +56,15 @@ app.patch("/api/tasks/:id", async (c) => {
   if (!parsed.ok) {
     return c.json({ error: parsed.error }, 400);
   }
-  tasks = tasks.map((t) => (t.id === id ? parsed.task : t));
-  return c.json(parsed.task);
+  const task = await updateTask(parsed.task);
+  return c.json(task);
 });
 
-app.delete("/api/tasks/:id", (c) => {
+app.delete("/api/tasks/:id", async (c) => {
   const id = Number(c.req.param("id"));
-  if (!tasks.some((t) => t.id === id)) {
+  if (!(await deleteTask(id))) {
     return c.json({ error: `id ${id} のタスクはありません` }, 404);
   }
-  tasks = tasks.filter((t) => t.id !== id);
   return c.body(null, 204);
 });
 
@@ -74,6 +75,8 @@ async function readJson(request: Request): Promise<unknown> {
     return undefined;
   }
 }
+
+await seedIfEmpty(sampleTasks);
 
 const port = 8787;
 

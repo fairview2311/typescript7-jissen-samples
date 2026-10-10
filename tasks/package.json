@@ -8,7 +8,9 @@
   "scripts": {
     "check": "tsc",
     "start": "npm run start --workspace=server",
-    "try": "npm run try --workspace=server"
+    "try": "npm run try --workspace=server",
+    "db:generate": "npm run db:generate --workspace=server",
+    "db:migrate": "npm run db:migrate --workspace=server"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",

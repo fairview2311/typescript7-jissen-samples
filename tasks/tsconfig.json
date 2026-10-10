@@ -12,7 +12,9 @@
     // Node.js が取り除ける型の書き方だけを使う
     "erasableSyntaxOnly": true,
     // 型だけの import には type を付けさせる
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    // node_modules の中の型定義ファイル（.d.ts）は確かめない
+    "skipLibCheck": true
   },
   "include": ["shared/src", "server/src"]
 }
