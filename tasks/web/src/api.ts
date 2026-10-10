@@ -1,47 +1,55 @@
+import { parseTask } from "@tasks/shared";
 import type { Task, TaskStatus } from "./types.ts";
 
-export type NewTask = {
-  title: string;
-  dueDate?: string;
-  priority: Task["priority"];
-  estimateMinutes: number;
-};
+export type NewTask = Omit<Task, "id" | "status">;
 
-async function check(response: Response): Promise<Response> {
+type Parse<T> = (value: unknown) => T;
+
+async function request<T>(path: string, parse: Parse<T>, init?: RequestInit): Promise<T> {
+  const response = await fetch(path, init);
   if (!response.ok) {
     throw new Error(`API がエラーを返しました: ${response.status}`);
   }
-  return response;
+  const body: unknown = await response.json();
+  return parse(body);
 }
 
-export async function fetchTasks(): Promise<Task[]> {
-  const response = await check(await fetch("/api/tasks"));
-  const tasks: Task[] = await response.json();
-  return tasks;
+const toTask: Parse<Task> = (value) => {
+  const parsed = parseTask(value);
+  if (!parsed.ok) {
+    throw new Error(`API の答えがタスクの形ではありません: ${parsed.error}`);
+  }
+  return parsed.task;
+};
+
+const toTasks: Parse<Task[]> = (value) => {
+  if (!Array.isArray(value)) {
+    throw new Error("API の答えが配列ではありません");
+  }
+  return value.map(toTask);
+};
+
+const sendJson = (method: string, body: unknown): RequestInit => ({
+  method,
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(body),
+});
+
+export function fetchTasks(): Promise<Task[]> {
+  return request("/api/tasks", toTasks);
 }
 
-export async function createTask(task: NewTask): Promise<Task> {
-  const response = await check(
-    await fetch("/api/tasks", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...task, status: "todo" }),
-    }),
-  );
-  return response.json();
+export function createTask(task: NewTask): Promise<Task> {
+  return request("/api/tasks", toTask, sendJson("POST", { ...task, status: "todo" }));
 }
 
-export async function changeStatus(id: number, status: TaskStatus): Promise<Task> {
-  const response = await check(
-    await fetch(`/api/tasks/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
-    }),
-  );
-  return response.json();
+export function changeStatus(id: number, status: TaskStatus): Promise<Task> {
+  return request(`/api/tasks/${id}`, toTask, sendJson("PATCH", { status }));
 }
 
 export async function removeTask(id: number): Promise<void> {
-  await check(await fetch(`/api/tasks/${id}`, { method: "DELETE" }));
+  const response = await fetch(`/api/tasks/${id}`, { method: "DELETE" });
+  if (!response.ok) {
+    throw new Error(`API がエラーを返しました: ${response.status}`);
+  }
 }

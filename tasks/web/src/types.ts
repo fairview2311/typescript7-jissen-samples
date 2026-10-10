@@ -1,12 +1,2 @@
-// 画面で使うタスクの型（第12章で shared の型に置き換える）
-export type TaskStatus = "todo" | "doing" | "done";
-export type Priority = "high" | "medium" | "low";
-
-export type Task = {
-  id: number;
-  title: string;
-  dueDate?: string;
-  status: TaskStatus;
-  priority: Priority;
-  estimateMinutes: number;
-};
+// 画面で使うタスクの型は、shared の型をそのまま使う
+export type { Priority, Task, TaskStatus } from "@tasks/shared";
