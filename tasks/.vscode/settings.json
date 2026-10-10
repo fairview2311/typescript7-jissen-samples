@@ -1,0 +1,5 @@
+{
+  "editor.formatOnSave": true,
+  "js/ts.inlayHints.parameterNames.enabled": "all",
+  "js/ts.inlayHints.functionLikeReturnTypes.enabled": true
+}
