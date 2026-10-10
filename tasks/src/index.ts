@@ -49,8 +49,32 @@ const tasks: Task[] = [
   },
 ];
 
-for (const task of tasks) {
+function formatTask(task: Task): string {
   const mark = task.done ? "[x]" : "[ ]";
   const due = task.dueDate ?? "期限なし";
-  console.log(`${mark} ${task.id}. ${task.title}（${due}、${task.estimateMinutes} 分）`);
+  return `${mark} ${task.id}. ${task.title}（${due}、${task.estimateMinutes} 分）`;
 }
+
+function printTasks(label: string, list: Task[]): void {
+  console.log(`--- ${label} ---`);
+  for (const task of list) {
+    console.log(formatTask(task));
+  }
+}
+
+const filterUndone = (list: Task[]): Task[] => {
+  return list.filter((task) => !task.done);
+};
+
+const dueKey = (task: Task): string => task.dueDate ?? "9999-12-31";
+
+const sortByDueDate = (list: Task[]): Task[] => {
+  return [...list].sort((a, b) => dueKey(a).localeCompare(dueKey(b)));
+};
+
+const undone = filterUndone(tasks);
+printTasks("未完了", undone);
+printTasks("未完了を期限の近い順に", sortByDueDate(undone));
+
+const titles = sortByDueDate(undone).map((task) => task.title);
+console.log(`次にやること: ${titles[0]}`);
