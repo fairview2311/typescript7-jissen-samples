@@ -3,14 +3,16 @@
   "private": true,
   "workspaces": [
     "shared",
-    "server"
+    "server",
+    "web"
   ],
   "scripts": {
-    "check": "tsc",
+    "check": "tsc && tsc -p web",
     "start": "npm run start --workspace=server",
     "try": "npm run try --workspace=server",
     "db:generate": "npm run db:generate --workspace=server",
-    "db:migrate": "npm run db:migrate --workspace=server"
+    "db:migrate": "npm run db:migrate --workspace=server",
+    "dev": "npm run dev --workspace=web"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",

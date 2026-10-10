@@ -1,0 +1,16 @@
+{
+  // 画面（ブラウザー）の型を確かめる設定
+  "compilerOptions": {
+    // Vite がまとめるので、import の読み方は Vite に合わせる
+    "moduleResolution": "bundler",
+    // .tsx の中の HTML のような書き方（JSX）を React 用に読む
+    "jsx": "react-jsx",
+    // Vite の型（import.meta.env など）を読む
+    "types": ["vite/client"],
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}
