@@ -23,8 +23,6 @@
 | 第12章 | [ch12](https://github.com/fairview2311/typescript7-jissen-samples/tree/ch12/tasks) | [ch12.zip](https://github.com/fairview2311/typescript7-jissen-samples/archive/refs/tags/ch12.zip) |
 | 第13章 | [ch13](https://github.com/fairview2311/typescript7-jissen-samples/tree/ch13/tasks) | [ch13.zip](https://github.com/fairview2311/typescript7-jissen-samples/archive/refs/tags/ch13.zip) |
 
-まだ開けない印は、その章の執筆中です。本の発行までにすべてそろえます。
-
 - 印の付いた ZIP を展開すると、`typescript7-jissen-samples-ch03` のような名前のフォルダーができ、その中に `tasks` フォルダーがあります
 - `tasks` フォルダーを VS Code で開き、ターミナルで `npm install` を打ってから使います（`node_modules` と `dist` は入っていません）
 - Git を使う人は `git clone https://github.com/fairview2311/typescript7-jissen-samples.git` の後、`git checkout ch03` のように章の印に切り替えます

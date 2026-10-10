@@ -12,10 +12,16 @@
     "try": "npm run try --workspace=server",
     "db:generate": "npm run db:generate --workspace=server",
     "db:migrate": "npm run db:migrate --workspace=server",
-    "dev": "npm run dev --workspace=web"
+    "dev": "npm run dev --workspace=web",
+    "test": "node --test",
+    "lint": "oxlint",
+    "dev:all": "concurrently npm:start npm:dev"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",
+    "concurrently": "^10.0.6",
+    "oxlint": "^1.87.0",
+    "oxlint-tsgolint": "^7.0.2003",
     "typescript": "^7.0.2"
   }
 }
